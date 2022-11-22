@@ -2,8 +2,5 @@
 
 internal class Program
 {
-    static void Main(string[] args)
-    {
-        Console.WriteLine("Hello, World!");
-    }
+    [STAThread] private static int Main(string[] args) => Args.Instance.Parse(args);
 }
