@@ -27,7 +27,7 @@ internal class DatabaseFunction
 
             var forceResetFlagOption = new Option<bool>(
                 name: "--forced",
-                description: "If the database is existing, overwrite as a new one without confirmation.");
+                description: "If the database is missing, make a new one without confirmation.");
             forceResetFlagOption.AddAlias("-f");
             command.AddOption(forceResetFlagOption);
 
@@ -53,20 +53,20 @@ internal class DatabaseFunction
         {
             Command command = new Command(
                 name: "new",
-                description: "Create/Reset database");
+                description: "Make a new database and initialize with pre-assigned entries.");
 
-            var forceResetFlagOption = new Option<bool>(
-                name: "--forced",
-                description: "If the database is existing, overwrite as a new one without confirmation.");
-            forceResetFlagOption.AddAlias("-f");
-            command.AddOption(forceResetFlagOption);
-
-            command.SetHandler((bool forceResetFlag) =>
+            command.SetHandler(() =>
             {
                 string message = command.Description;
                 Console.WriteLine(message);
                 Console.WriteLine();
 
+                Database database = Database.Load(Args.DatabasePath);
+                if (database == null)
+                {
+                    Console.WriteLine("db reset completed. try again");
+                    Environment.Exit(1);
+                }
                 //DatabaseFunction.ActivateDatabase(forceResetFlag);
 
                 //Console.WriteLine($"Writing... '{Path.GetFullPath(Settings.Instance.DatabasePath)}'");
@@ -74,7 +74,46 @@ internal class DatabaseFunction
 
                 Console.WriteLine();
                 Console.WriteLine($"{message}... done");
-            }, forceResetFlagOption);
+            });
+
+            return command;
+        }
+    }
+
+    public static Command AddCommand
+    {
+        get
+        {
+            Command command = new Command(
+                name: "add",
+                description: "Add a new database and initialize with pre-assigned entries.");
+
+            command.SetHandler(() =>
+            {
+                string message = command.Description;
+                Console.WriteLine(message);
+                Console.WriteLine();
+
+                Database database = Database.Load(Args.DatabasePath);
+                if (database == null)
+                {
+                    Console.WriteLine("db reset completed. try again");
+                    Environment.Exit(1);
+                }
+                //DatabaseFunction.ActivateDatabase(forceResetFlag);
+
+                //Console.WriteLine($"Writing... '{Path.GetFullPath(Settings.Instance.DatabasePath)}'");
+                //Database.Reset(Settings.Instance.DatabasePath);
+
+                database.AddEntry(new Entry());
+                database.AddEntry(new Entry());
+                database.AddEntry(new Entry());
+
+                database.Save();
+
+                Console.WriteLine();
+                Console.WriteLine($"{message}... done");
+            });
 
             return command;
         }
@@ -131,26 +170,22 @@ internal class DatabaseFunction
                 name: "import",
                 description: "Import database");
 
-            var forceResetFlagOption = new Option<bool>(
-                name: "--forced",
-                description: "If the database is existing, overwrite as a new one without confirmation.");
-            forceResetFlagOption.AddAlias("-f");
-            command.AddOption(forceResetFlagOption);
+            //var forceResetFlagOption = new Option<bool>(
+            //    name: "--forced",
+            //    description: "If the database is existing, overwrite as a new one without confirmation.");
+            //forceResetFlagOption.AddAlias("-f");
+            //command.AddOption(forceResetFlagOption);
 
-            command.SetHandler((bool forceResetFlag) =>
-            {
-                string message = command.Description;
-                Console.WriteLine(message);
-                Console.WriteLine();
+            //command.SetHandler((bool forceResetFlag) =>
+            //{
+            //    string message = command.Description;
+            //    Console.WriteLine(message);
+            //    Console.WriteLine();
 
-                //DatabaseFunction.ActivateDatabase(forceResetFlag);
 
-                //Console.WriteLine($"Writing... '{Path.GetFullPath(Settings.Instance.DatabasePath)}'");
-                //Database.Reset(Settings.Instance.DatabasePath);
-
-                Console.WriteLine();
-                Console.WriteLine($"{message}... done");
-            }, forceResetFlagOption);
+            //    Console.WriteLine();
+            //    Console.WriteLine($"{message}... done");
+            //}, forceResetFlagOption);
 
             return command;
         }
@@ -164,26 +199,23 @@ internal class DatabaseFunction
                 name: "export",
                 description: "Export database");
 
-            var forceResetFlagOption = new Option<bool>(
-                name: "--forced",
-                description: "If the database is existing, overwrite as a new one without confirmation.");
-            forceResetFlagOption.AddAlias("-f");
-            command.AddOption(forceResetFlagOption);
+            //var forceResetFlagOption = new Option<bool>(
+            //    name: "--forced",
+            //    description: "If the database is existing, overwrite as a new one without confirmation.");
+            //forceResetFlagOption.AddAlias("-f");
+            //command.AddOption(forceResetFlagOption);
 
-            command.SetHandler((bool forceResetFlag) =>
-            {
-                string message = command.Description;
-                Console.WriteLine(message);
-                Console.WriteLine();
+            //command.SetHandler((bool forceResetFlag) =>
+            //{
+            //    string message = command.Description;
+            //    Console.WriteLine(message);
+            //    Console.WriteLine();
 
-                //DatabaseFunction.ActivateDatabase(forceResetFlag);
 
-                //Console.WriteLine($"Writing... '{Path.GetFullPath(Settings.Instance.DatabasePath)}'");
-                //Database.Reset(Settings.Instance.DatabasePath);
 
-                Console.WriteLine();
-                Console.WriteLine($"{message}... done");
-            }, forceResetFlagOption);
+            //    Console.WriteLine();
+            //    Console.WriteLine($"{message}... done");
+            //}, forceResetFlagOption);
 
             return command;
         }

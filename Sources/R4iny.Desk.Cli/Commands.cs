@@ -12,11 +12,10 @@ internal class Commands
             Command command = new Command(
                 name: "database",
                 description: "Commands about database.");
-            command.AddAlias("db");
 
             var forceResetFlagOption = new Option<bool>(
                 name: "--forced",
-                description: "If the database is existing, overwrite as a new one without confirmation.");
+                description: "If the database is missing, make a new one without confirmation.");
             forceResetFlagOption.AddAlias("-f");
             command.AddOption(forceResetFlagOption);
 
@@ -28,8 +27,9 @@ internal class Commands
                 DatabaseFunction.CurrentCommand,
                 DatabaseFunction.ClearCommand,
                 DatabaseFunction.NewCommand,
-                DatabaseFunction.ImportCommand,
-                DatabaseFunction.ExportCommand,
+                DatabaseFunction.AddCommand,
+                //DatabaseFunction.ImportCommand,
+                //DatabaseFunction.ExportCommand,
             });
 
             return command;
